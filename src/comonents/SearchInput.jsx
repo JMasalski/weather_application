@@ -7,7 +7,7 @@ import { useDebounce } from "use-debounce";
 
 export default function SearchInput() {
   const [city, setCity] = useState("");
-  const [debouncedCity] = useDebounce(city, 500);
+  const [debouncedCity] = useDebounce(city, 300);
   const { fetchWeather, isLoading } = useWeatherStore();
   const { fetchAstronomy } = useAstronomyStore();
   const { suggestions, fetchSugesstions, setSuggestions } = useSugestionStore();
@@ -18,21 +18,37 @@ export default function SearchInput() {
   }, []);
 
   useEffect(() => {
-    if (debouncedCity.length >= 3) {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (debouncedCity.length >= 2) {
       fetchSugesstions(debouncedCity);
     } else {
-      setSuggestions([]); // Czyszczenie podpowiedzi, jeśli użytkownik skasuje wpis
+      setSuggestions([]);
     }
   }, [debouncedCity]);
 
-  const searchForecast = () => {
-    fetchWeather(city);
-    setSuggestions([]); // Zamknij podpowiedzi
+  const searchForecast = (location) => {
+    fetchWeather(location);
+    fetchAstronomy(location);
+    setSuggestions([]);
   };
 
   const handleSuggestionClick = (name, country) => {
-    setCity(`${name}, ${country}`);
-    setSuggestions([]); // Ukrycie listy po wyborze miasta
+    const newCity = `${name}, ${country}`;
+    setCity(newCity);
+    setSuggestions([]);
+    searchForecast(newCity); 
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      searchForecast(city); 
+    }
   };
 
   return (
@@ -43,26 +59,26 @@ export default function SearchInput() {
         <Search
           className="absolute left-3 top-1/2 -translate-y-1/2 cursor-pointer"
           size={20}
-          onClick={searchForecast}
+          onClick={() => searchForecast(city)}
         />
       )}
       <input
         type="text"
         placeholder="Search your location"
-        className={`w-full p-2 pl-10 bg-primary text-white  focus:outline-none ${suggestions.length > 0 ? "rounded-t-full" : "rounded-full"}`}
+        className={`w-full p-2 pl-10 bg-primary text-white focus:outline-none ${suggestions.length > 0 ? "rounded-t-full" : "rounded-full"}`}
         value={city}
         onChange={(e) => setCity(e.target.value)}
-        onBlur={() => setTimeout(() => setSuggestions([]), 200)} // Zamknij listę po kliknięciu poza input
+        onKeyDown={handleKeyDown}
+        onBlur={() => setTimeout(() => setSuggestions([]), 200)}
       />
 
-      {/* 🔹 Lista podpowiedzi */}
       {suggestions.length > 0 && (
         <ul className="absolute w-full z-10 bg-primary text-white rounded-b-lg shadow-lg max-h-40 overflow-y-auto">
           {suggestions.map((suggestion, index) => (
             <li
               key={index}
               className="p-2 hover:bg-gray-200 cursor-pointer"
-              onMouseDown={() => handleSuggestionClick(suggestion.name, suggestion.country)}
+              onClick={() => handleSuggestionClick(suggestion.name, suggestion.country)}
             >
               {suggestion.name}, {suggestion.country}
             </li>
