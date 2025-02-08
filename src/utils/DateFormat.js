@@ -12,3 +12,10 @@ export const getDayOfWeek = (date) => {
     const dayIndex = new Date(date).getDay();
     return days[dayIndex];
   };
+
+
+export const getShortDayName = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", { weekday: "short" }); // np. "Mon", "Tue"
+  };
+  

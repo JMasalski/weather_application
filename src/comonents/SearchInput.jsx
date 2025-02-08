@@ -8,13 +8,14 @@ import { useDebounce } from "use-debounce";
 export default function SearchInput() {
   const [city, setCity] = useState("");
   const [debouncedCity] = useDebounce(city, 300);
-  const { fetchWeather, isLoading } = useWeatherStore();
+  const { fetchWeather,fetchFutureForecast, futureForecast ,isLoading } = useWeatherStore();
   const { fetchAstronomy } = useAstronomyStore();
   const { suggestions, fetchSugesstions, setSuggestions } = useSugestionStore();
 
   useEffect(() => {
     fetchWeather("London");
     fetchAstronomy("London");
+    fetchFutureForecast("London");
   }, []);
 
   useEffect(() => {
@@ -35,6 +36,7 @@ export default function SearchInput() {
   const searchForecast = (location) => {
     fetchWeather(location);
     fetchAstronomy(location);
+    fetchFutureForecast(location);
     setSuggestions([]);
   };
 
