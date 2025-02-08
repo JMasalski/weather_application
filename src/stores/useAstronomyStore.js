@@ -1,15 +1,15 @@
 import { create } from "zustand";
 import axios from "axios";
 
-const API_URL = "http://api.weatherapi.com/v1/current.json";
+const API_URL = "http://api.weatherapi.com/v1/astronomy.json";
 const API_KEY = import.meta.env.VITE_API_KEY;
 
-export const useWeatherStore = create((set) => ({
-  weather: null,
+export const useAstronomyStore = create((set) => ({
+  astronomy: null,
   isLoading: false,
   error: null,
 
-  fetchWeather: async (city) => {
+  fetchAstronomy: async (city) => {
     set({ isLoading: true, error: null });
 
     try {
@@ -21,17 +21,11 @@ export const useWeatherStore = create((set) => ({
         },
       });
 
-      set({ weather: response.data });
+      set({ astronomy: response.data });
     } catch (error) {
       set({ error: error.message });
     } finally {
       set({ isLoading: false });
     }
   },
-
 }));
-
-
-
-//miasto, kraj, dzien tygodnia, pogoda, temperatura, opis pogody, odczuwalna temp - glowny
-//today highlit - wind status, humidity sunrise, uv index ,visibilty, sunset

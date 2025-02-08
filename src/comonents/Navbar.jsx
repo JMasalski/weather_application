@@ -1,8 +1,11 @@
-import { Search } from "lucide-react"
+
 import React from 'react'
 import SearchInput from "./SearchInput"
 
+
 const Navbar = () => {
+
+  
   return (
     <header>
       <div className="flex justify-between items-center p-6 md:p-8 lg:p-12 ">
