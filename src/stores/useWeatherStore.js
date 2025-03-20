@@ -1,9 +1,9 @@
 import { create } from "zustand";
 import axios from "axios";
 
-const API_URL_CURRENT = "http://api.weatherapi.com/v1/current.json";
+const API_URL_CURRENT = "https://api.weatherapi.com/v1/current.json";
 
-const API_URL_FUTURE = "http://api.weatherapi.com/v1/forecast.json";
+const API_URL_FUTURE = "https://api.weatherapi.com/v1/forecast.json";
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 

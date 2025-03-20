@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 
-const API_URL = "http://api.weatherapi.com/v1/astronomy.json";
+const API_URL = "https://api.weatherapi.com/v1/astronomy.json";
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 export const useAstronomyStore = create((set) => ({
